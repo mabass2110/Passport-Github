@@ -11,14 +11,6 @@ const passport = require("passport-github2");
 const GitHubStrategy = require("passport-github2").Strategy;
 const app = express();
 
-//Middlewares
-app.use(session({
-  secret: 'codecademy',
-  resave: false,
-  saveUninitialized: false,
-}))
-
-
 /*
  * Variable Declarations
 */
@@ -34,12 +26,17 @@ passport.use(new GitHubStrategy({
   clientID: GITHUB_CLIENT_ID,
   clientSecret: GITHUB_CLIENT_SECRET,
   callbackURL: "http://localhost:3000/auth/github/callback"
+}, function(accessToken, refreshToken, profile, done) {
+  return done(null, profile);
 }))
 
+passport.serializeUser((user, done) => {
+  return done(null, user);
+})
 
-
-
-
+passport.deserializeUser((err, done) => {
+  return done(null, user);
+})
 
 /*
  *  Express Project Setup
@@ -50,7 +47,13 @@ app.set('view engine', 'ejs');
 app.use(partials());
 app.use(express.json());
 app.use(express.static(__dirname + '/public'));
-
+app.use(session({
+  secret: 'codecademy',
+  resave: false,
+  saveUninitialized: false,
+}))
+app.use(passport.initialize())
+app.use(passport.session())
 
 
 
