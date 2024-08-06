@@ -7,7 +7,8 @@ require("dotenv").config();
 const express = require('express');
 const partials = require('express-partials');
 const session = require("express-session")
-
+const passport = require("passport-github2");
+const GitHubStrategy = require("passport-github2").Strategy;
 const app = express();
 
 //Middlewares
@@ -29,7 +30,11 @@ const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 /*
  * Passport Configurations
 */
-
+passport.use(new GitHubStrategy({
+  clientID: GITHUB_CLIENT_ID,
+  clientSecret: GITHUB_CLIENT_SECRET,
+  callbackURL: "http://localhost:3000/auth/github/callback"
+}))
 
 
 
