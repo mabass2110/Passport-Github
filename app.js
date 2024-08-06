@@ -6,9 +6,16 @@ const path = require("path");
 require("dotenv").config();
 const express = require('express');
 const partials = require('express-partials');
-
+const session = require("express-session")
 
 const app = express();
+
+//Middlewares
+app.use(session({
+  secret: 'codecademy',
+  resave: false,
+  saveUninitialized: false,
+}))
 
 
 /*
